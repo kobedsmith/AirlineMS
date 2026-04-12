@@ -1,0 +1,3 @@
+Required Classes: Passenger and Booking.
+
+Additional Class: ID.
