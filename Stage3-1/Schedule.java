@@ -1,4 +1,4 @@
-//Kobe Smith on 3/31/2026
+//Bryndon Hinton on 3/31/2026
 
 /**
  * The Schedule class represents the schedule of flights for an airline. It provides a method to display
