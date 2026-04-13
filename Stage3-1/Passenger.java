@@ -1,4 +1,4 @@
-//Kobe Smith on 3/31/2026
+//Dominic Gutierrez on 3/31/2026
 import java.util.ArrayList;
 /**
  * The Passenger class represents a passenger traveling on an airline flight. It contains information
