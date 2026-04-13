@@ -1,4 +1,4 @@
-//Kobe Smith on 4/6/2026
+//Bryndon Hinton on 4/6/2026
 
 public class printTicket {
    public void showTicketInfo(Passenger passenger, Flight flight, Ticket ticket) {
