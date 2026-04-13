@@ -1,4 +1,4 @@
-//Kobe Smith on 4/5/2026
+//Bryndon Hinton on 4/5/2026
 import java.util.ArrayList;
 
 public class UserLog {
