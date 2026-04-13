@@ -1,4 +1,4 @@
-//Kobe Smith on 4/6/2026
+//Dominic Gutierrez on 4/6/2026
 
 public class Payment {
     String name;
