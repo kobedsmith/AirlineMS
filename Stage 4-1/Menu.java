@@ -108,7 +108,8 @@ public class Menu {
             System.out.println("1. Book a Flight");
             System.out.println("2. View Tickets");
             System.out.println("3. Cancel Booking");
-            System.out.println("4. Back to Main Menu");
+            System.out.println("4. Update Information");
+            System.out.println("5. Back to Main Menu");
             System.out.print("Choice: ");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -224,6 +225,27 @@ public class Menu {
                     }
                     break;
                 case 4:
+                    //New case to update Passenger info
+                    String Pnr, toUpdate;
+                    System.out.println("Enter your PNR: ");
+                    Pnr = sc.nextLine();
+                    System.out.print("What do you Wish to Update (name or email)? ");
+                    toUpdate = sc.nextLine();
+
+                    for (Passenger p : app.getUserLog().getPassengerLog())
+                        if (Pnr.equalsIgnoreCase(p.getPnr())) {
+                            if (toUpdate.equalsIgnoreCase("name")) {
+                                System.out.print("Enter New Name: ");
+                                String name = sc.nextLine();
+                                p.setName(name);
+                            }
+                            else if (toUpdate.equalsIgnoreCase("email")) {
+                                System.out.print("Enter New Email: ");
+                                String email = sc.nextLine();
+                                p.setEmail(email);
+                            }
+                        }
+                case 5:
                     System.out.println("Returning to Main Menu...\n");
                 return;
             }
@@ -483,12 +505,12 @@ public class Menu {
                 String department;
                 int staffIDLogin;
 
+                System.out.print("Enter your Name: ");
+                sc.nextLine(); //consume extra line
+                name = sc.nextLine();
                 System.out.print("Enter your Staff ID: ");
                 staffIDLogin = sc.nextInt();
                 sc.nextLine();
-                System.out.print("Enter your department: ");
-                department = sc.nextLine();
-
 
                 for (Staff s : app.getUserLog().getStaffLog()) {
                     if (s.getStaffID() == staffIDLogin && s.getDepartment().equalsIgnoreCase(department)) {
@@ -803,10 +825,11 @@ public class Menu {
         do {
             System.out.println("\nHuman Resources Menu:");
             System.out.println("1. View Employee Records");
-            System.out.println("2. Hire New Employee");
-            System.out.println("3. Fire Employee");
-            System.out.println("4. View TSA Details");
-            System.out.println("5. Back to Main Menu");
+            System.out.println("2. Update Employee Information");
+            System.out.println("3. Hire New Employee");
+            System.out.println("4. Fire Employee");
+            System.out.println("5. View TSA Details");
+            System.out.println("6. Back to Main Menu");
             System.out.print("Choice: ");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -820,16 +843,61 @@ public class Menu {
                         }
                     break;
                 case 2:
-                    showHireMenu();
+                    //Case added to update Employee info
+                    System.out.print("Enter the ID of the Employee: ");
+                    int Id = sc.nextInt();
+                    sc.nextLine();
+
+                    for (Staff s : app.getUserLog().getStaffLog()) {
+                        if (Id == s.getStaffID()) {
+                            System.out.print("What do you Wish to Update? ");
+                            String toUpdate = sc.nextLine();
+                            if (toUpdate.equalsIgnoreCase("name")) {
+                                System.out.print("Enter New Name: ");
+                                String name = sc.nextLine();
+                                s.setName(name);
+                                System.out.println("Information updated successfully!");
+                            }
+                            else if (toUpdate.equalsIgnoreCase("age")) {
+                                System.out.print("Enter New Age: ");
+                                int age = sc.nextInt();
+                                s.setAge(age);
+                                System.out.println("Information updated successfully!");
+                            } else if (toUpdate.equalsIgnoreCase("email")) {
+                                System.out.print("Enter New Email: ");
+                                String email = sc.nextLine();
+                                s.setEmail(email);
+                                System.out.println("Information updated successfully!");
+                            } else if (toUpdate.equalsIgnoreCase("work number")) {
+                                System.out.print("Enter New Work Number: ");
+                                String workNum = sc.nextLine();
+                                s.setWorkNum(workNum);
+                                System.out.println("Information updated successfully!");
+                            } else if (toUpdate.equalsIgnoreCase("department")) {
+                                System.out.print("Enter New Department: ");
+                                String department = sc.nextLine();
+                                s.setDepartment(department);
+                                System.out.println("Information updated successfully!");
+                            } else if (toUpdate.equalsIgnoreCase("salary")) {
+                                System.out.print("Enter New Salary: ");
+                                int salary = sc.nextInt();
+                                s.setSalary(salary);
+                                System.out.println("Information updated successfully!");
+                            }
+                        }
+                    }
                     break;
                 case 3:
-                    showFireMenu();
+                    showHireMenu();
                     break;
                 case 4:
+                    showFireMenu();
+                    break;
+                case 5:
                     System.out.println("Viewing TSA details...");
                     System.out.println(app.getTsa().toString());
                     break;
-                case 5:
+                case 6:
                     System.out.println("Returning to Main Menu...\n");
                     return;
                 default:
