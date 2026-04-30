@@ -45,6 +45,11 @@ public class Ticket {
     public String getPassengerPnr() {
         return passengerPnr;
     }
+    
+    //Edit: needed so menu can display updated ticket prices
+    public double getPrice() {
+        return price;
+    }
 
     public void setPrice(double price) {
         this.price = price;

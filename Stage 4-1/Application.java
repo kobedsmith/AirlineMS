@@ -1,4 +1,4 @@
-//Kobe Smith on 4/3/2026
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;

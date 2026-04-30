@@ -62,6 +62,10 @@ public class FlightManager extends Staff{
     public void removePassenger(Passenger passenger, Flight flight) {
         passengerList.remove("- " + passenger.getName() + " - Flight: " + flight.getFlightID());
     }
+    
+    public void removePassengerFromFlight(String passengerName, String flightID) {
+        passengerList.remove("- " + passengerName + " - Flight: " + flightID);
+    }
 
     public ArrayList<String> getPassengerList() {
         return passengerList;
@@ -105,7 +109,7 @@ public class FlightManager extends Staff{
         return seatsAvailable;
     }
 
-    //3 new methods addedd to manage purchased tickets and new passengers.
+    //3 new methods addedd to manage purchased and new passengers.
     public void addTicket(Ticket ticket) {
         purchasedTicketList.add(ticket);
     }

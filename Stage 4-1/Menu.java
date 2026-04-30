@@ -122,11 +122,22 @@ public class Menu {
                     }
                     System.out.print("Enter the Flight ID you want to book: ");
                     String flightID = sc.nextLine();
+                    
+                    //Edit: save the selected flight to connect to passenger later
+                    Flight selectedFlight = null;
                 
                     for (Flight f : app.getFlightManager().flightList()) {
                         if (f.getFlightID().equalsIgnoreCase(flightID)) {
+                            selectedFlight = f;
                             System.out.println("You selected flight " + f.getFlightID());
+                            break;
                         }
+                    }
+                    
+                    //Edit: prevent booking if flight id doesnt exist
+                    if (selectedFlight == null) {
+                        System.out.println("Invalid flight ID! Please try again.");
+                        break;
                     }
 
                     System.out.println("\nAvailable Ticket Types:");
@@ -137,32 +148,40 @@ public class Menu {
                     System.out.print("Ticket type (View Ticket Types Above): ");
                     String ticketType = sc.nextLine();
 
-                    double amount;
-                    String TicketId;
-                    if (ticketType.equalsIgnoreCase("Economy")) {
-                        Ticket ticket = new Ticket(ticketType, "#T101", passenger.getPnr(), 0.0);
-                        amount = ticket.getEconPrice();
-                        TicketId = ticket.getEconTicketId();
-                        //app.getTicketManager().addTicket(ticket);
-                    } else if (ticketType.equalsIgnoreCase("Premium")) {
-                        Ticket ticket = new Ticket(ticketType, "#T102", passenger.getPnr(), 0.0);
-                        amount = ticket.getPremPrice();
-                        TicketId = ticket.getPremTicketId();
-                        //app.getTicketManager().addTicket(ticket);
-                    } else if (ticketType.equalsIgnoreCase("Business")) {
-                        Ticket ticket = new Ticket(ticketType, "#T103", passenger.getPnr(), 0.0);
-                        amount = ticket.getBusPrice();
-                        TicketId = ticket.getBusTicketId();
-                        //app.getTicketManager().addTicket(ticket);
-                    } else if (ticketType.equalsIgnoreCase("First Class")) {
-                        Ticket ticket = new Ticket(ticketType, "#T104", passenger.getPnr(), 0.0);
-                        amount = ticket.getFirstPrice();
-                        TicketId = ticket.getFirstTicketId();
-                        //app.getTicketManager().addTicket(ticket);
-                    } else {
+                    double amount = 0.0;
+                    String TicketId = "";
+                    Ticket selectedTicketType = null;
+                    
+                    //edit: find ticket type from TicketManager instead of hardcoding
+                    for (Ticket t : app.getTicketManager().getTicketTypes()) {
+                        if (t.getClassType().equalsIgnoreCase(ticketType)) {
+                            selectedTicketType = t;
+                            break;
+                        }
+                    }
+                    
+                    //edit: stop if user types invalid ticket type
+                    if (selectedTicketType == null) {
                         System.out.println("Invalid ticket type! Please try again.");
                         break;
                     }
+                    
+                    //Edit: use current ticket price from TicketManager
+                    amount = selectedTicketType.getPrice();
+                    
+                   //edit:create passenger ticket ID using selected ticket type
+                    if (ticketType.equalsIgnoreCase("Economy")) {
+                        TicketId = "Economy" + passenger.getPnr();
+                    } else if (ticketType.equalsIgnoreCase("Premium")) {
+                        TicketId = "Premium" + passenger.getPnr();
+                    } else if (ticketType.equalsIgnoreCase("Business")) {
+                        TicketId = "Business" + passenger.getPnr();
+                    } else if (ticketType.equalsIgnoreCase("First Class")) {
+                        TicketId = "First Class" + passenger.getPnr();
+                    } else {
+                        TicketId = selectedTicketType.getTicketID() + "-" + passenger.getPnr();
+                    }
+                    
                     System.out.println("Total cost: $" + amount);
 
                     System.out.print("\nCard or Cash? ");
@@ -180,20 +199,34 @@ public class Menu {
 
                         Payment card = new Card(amount, cardName, cardNumber, expirationDate, cvv);
                         app.getPaymentProcessor().processPayment(card, amount, passenger, "Confirmed");
-                        app.getTicketManager().addPassengerTicket(new Ticket(ticketType, TicketId, passenger.getPnr(), amount), passenger, flightID);
-                        //edited to add purchased ticket to flight manager
-                        app.getFlightManager().addTicket(new Ticket(ticketType, TicketId, passenger.getPnr(), amount));
+                        
+                        //Edit: create one ticket object and reuse instead of making duplicate ticket objects
+                        Ticket purchasedTicket = new Ticket(ticketType, TicketId, passenger.getPnr(), amount);
+                        
+                        app.getTicketManager().addPassengerTicket(purchasedTicket, passenger, flightID);
+                        app.getFlightManager().addTicket(purchasedTicket);
+                        
+                        //Edit: connect passenger to the selected flight for Flight Manager to see it
+                        app.getFlightManager().addPassenger(passenger, selectedFlight);
                         break;
+                        
                     } else if (paymentMethod.equalsIgnoreCase("Cash")) {
                         System.out.print("Enter name on cash payment: ");
                         String cashName = sc.nextLine();
 
                         Payment cash = new Cash(amount, cashName);
                         app.getPaymentProcessor().processPayment(cash, amount, passenger, "Confirmed");
-                        app.getTicketManager().addPassengerTicket(new Ticket(ticketType, TicketId, passenger.getPnr(), amount), passenger, flightID);
-                        //edited to add purchased ticket to flight manager
-                        app.getFlightManager().addTicket(new Ticket(ticketType, TicketId, passenger.getPnr(), amount));
+                        
+                        //edit: create one ticket object and reuse instead of making duplicate ticket objects
+                        Ticket purchasedTicket = new Ticket(ticketType, TicketId, passenger.getPnr(), amount);
+                        
+                        app.getTicketManager().addPassengerTicket(purchasedTicket, passenger, flightID);
+                        app.getFlightManager().addTicket(purchasedTicket);
+                        
+                        //edit: connect passenger to the selected flight for Flight Manager to see
+                        app.getFlightManager().addPassenger(passenger, selectedFlight);
                         break;
+                        
                     } else {
                         System.out.println("Invalid payment method! Please try again.");
                         break;
@@ -215,13 +248,26 @@ public class Menu {
                     String cancelPnr = sc.nextLine();
 
                     System.out.println("Cancelling booking...");
+                    
+                    //edit: made input for cancellation more strict as it was accepting Pnr for flightid beforehand.
+                    boolean cancelled = false;
+                    
                     for (String ticketInfo : app.getTicketManager().getPassengerTickets()) {
-                        if (ticketInfo.contains(cancelPnr) && ticketInfo.contains(cancelFlightID)) {
+                        if (ticketInfo.contains("PNR: " + cancelPnr) && ticketInfo.contains("Flight: " + cancelFlightID)) {
                             System.out.println("Booking cancelled successfully for flight " + cancelFlightID + " with PNR: " + cancelPnr);
                             app.getTicketManager().removePassengerTicket(ticketInfo);
                             app.getFlightManager().removePassengerTicket(ticketInfo);
+                            
+                            //edit: remove passenger from flight manager's passenger list
+                            app.getFlightManager().removePassengerFromFlight(passenger.getName(), cancelFlightID);
+                            
+                            cancelled = true;
                             break;
                         }
+                    }
+                    
+                    if (!cancelled) {
+                        System.out.println("No matching booking found for flight " + cancelFlightID + " and PNR " + cancelPnr + ".");
                     }
                     break;
                 case 4:
@@ -507,13 +553,21 @@ public class Menu {
 
                 System.out.print("Enter your Name: ");
                 sc.nextLine(); //consume extra line
-                name = sc.nextLine();
+                String name = sc.nextLine();
+                
                 System.out.print("Enter your Staff ID: ");
                 staffIDLogin = sc.nextInt();
                 sc.nextLine();
+                
+                //Edit: Department is declared above but not given a value.
+                //Fixes the "variable department not initialized" issue.
+                System.out.print("Enter your Department: ");
+                department = sc.nextLine();
 
                 for (Staff s : app.getUserLog().getStaffLog()) {
-                    if (s.getStaffID() == staffIDLogin && s.getDepartment().equalsIgnoreCase(department)) {
+                    //Edit: Added name check so name varriable is used
+                    if (s.getName().equalsIgnoreCase(name) && s.getStaffID() == staffIDLogin && s.getDepartment().equalsIgnoreCase(department)) {
+                        
                         if (department.equalsIgnoreCase("Aircraft Management")) {
                             System.out.println("Login successful! Welcome back, " + s.getName() + "!\n");
                             showAircraftManagerMenu();
@@ -530,9 +584,14 @@ public class Menu {
                             System.out.println("Invalid department. Please try again.\n");
                             break;
                         }
+                        //edit: return after menu launch
+                        return;
                     }
                 }
+                //Edit: if loop finishes with no matching staff, show invalid
+                System.out.println("Invalid input, try again.\n");
                 return;
+                
             case 2:
                 System.out.println("Returning to Main Menu...\n");
                 break;
