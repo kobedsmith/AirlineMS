@@ -1,0 +1,1 @@
+Go into the Dist folder and run the AmsGui.jar file or read the README file in there
