@@ -1,4 +1,0 @@
-Kobe Smith, 40, 1001, kobe.smith@airline.com, 376891467, Aircraft Management, 80000
-Rone Smith, 38, 1004, rone.smith@airline.com, 456789123, Flight Management, 75000
-John Doe, 35, 1002, john.doe@airline.com, 987654321, Ticket Management, 65000
-Bob Wilson, 42, 1005, bob.wilson@airline.com, 765432109, Payment Processing, 85000

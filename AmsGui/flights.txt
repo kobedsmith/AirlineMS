@@ -1,4 +1,0 @@
-FL1001, New York, Los Angeles, A10, 10:00 AM, 1:00 PM
-FL1002, Los Angeles, Chicago, B20, 2:00 PM, 5:00 PM
-FL1003, Chicago, Miami, C30, 6:00 PM, 9:00 PM
-FL1004, Miami, New York, D40, 10:00 PM, 1:00 AM

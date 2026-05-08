@@ -1,4 +1,0 @@
-Economy, #T101, N/A, $600.00
-Premium, #T102, N/A, $960.00
-Business, #T103, N/A, $2000.00
-First Class, #T104, N/A, $4500.00
